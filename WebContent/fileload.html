@@ -1,0 +1,27 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<title>文件上传页面</title>
+	</head>
+
+	<body>
+		<div class="register-container">
+			<h1>文件上传</h1>
+			<form action="/LoginDemo/myupload" method="post" role="form" enctype="multipart/form-data">
+				<div>
+					<label for="userName" class="col-sm-2 control-label">用户名:</label>
+					<input type="text" name="userName" placeholder="输入用户名" />
+				</div>
+				<div>
+					<label for="userName" class="col-sm-2 control-label">文件上传:</label>
+					<input type="file" name="myfile" />
+				</div>
+				<button type="submit">提交</button>
+				<button type="reset" style="background: #F0AD4E;">重 置</button>
+			</form>
+		</div>
+	</body>
+
+</html>

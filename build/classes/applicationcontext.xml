@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:jdbc="http://www.springframework.org/schema/jdbc"
+	xsi:schemaLocation="http://www.springframework.org/schema/jdbc http://www.springframework.org/schema/jdbc/spring-jdbc-4.2.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.2.xsd">
+
+	<context:annotation-config></context:annotation-config>
+
+	<context:component-scan base-package="com.etc"></context:component-scan>
+
+
+	<!-- 占位符的配置 -->
+	<bean
+		class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+		<!-- 注入 -->
+		<property name="locations">
+			<!-- value classpath 代指的是 src目录[明确说应该是编译之后的那个目录 bin]; -->
+			<value>classpath:jdbc.properties</value>
+		</property>
+	</bean>
+
+	<!-- 创建一个DataSource对象,要拿给jdbcTemplate的属性 -->
+	<!-- 这个class应该是 javax.sql.DataSource的实现类 -->
+	<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource">
+		<!-- 就是注入 driverClassName url username password -->
+		<property name="driverClassName" value="${jdbc.driverClassName}"></property>
+		<property name="url" value="${jdbc.url}"></property>
+		<property name="username" value="${jdbc.username}"></property>
+		<property name="password" value="${jdbc.password}"></property>
+	</bean>
+
+	<!-- 创建一个jdbcTemplate的bean对象 -->
+	<bean id="jdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate">
+		<!-- 如果我们的jdbcTEmplate要正常工作需要注入一个DataSource类型的对象，javax.sql.DataSource -->
+		<property name="dataSource" ref="dataSource"></property>
+	</bean>
+	<bean class="com.etc.dao.impl.UserDaoImpl">
+		<!-- 注入 jdbcTemplate -->
+		<property name="jdbcTemplate" ref="jdbcTemplate"></property>
+	</bean>
+</beans>
