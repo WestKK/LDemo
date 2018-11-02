@@ -14,6 +14,7 @@ import com.etc.entity.User;
 import com.etc.service.UserService;
 
 @Controller
+@RequestMapping(value="loginMsg")
 public class LoginController {
 
 	@Resource(name = "userService")

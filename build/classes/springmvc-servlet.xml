@@ -42,5 +42,18 @@
 		</property>
 	</bean>
 
+	<mvc:interceptors>
+		<mvc:interceptor>
+		  <!-- 所有都会拦截，/**包含子目录 -->
+			<mvc:mapping path="/**" />
+			<!-- 此时访问api/的url则不会被拦截 -->
+			<mvc:exclude-mapping path="/loginMsg/**" />
+			<mvc:exclude-mapping path="/*.html" />
+			<mvc:exclude-mapping path="/css/**" />
+			<mvc:exclude-mapping path="/layer/**" />
+			<mvc:exclude-mapping path="/img/**" />
+			<bean class="com.etc.interceptor.MyInterceptor"></bean>
+		</mvc:interceptor>
+	</mvc:interceptors>
 
 </beans>

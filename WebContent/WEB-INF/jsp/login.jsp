@@ -13,19 +13,20 @@
 <title>登录界面</title>
 
 <!-- Bootstrap core CSS -->
-<link href="css/bootstrap.min.css" rel="stylesheet">
+<link href="${pageContext.request.contextPath}/css/bootstrap.min.css"
+	rel="stylesheet">
 
 <!-- Custom styles for this template -->
-<link href="css/signin.css" rel="stylesheet">
-
+<link href="${pageContext.request.contextPath}/css/signin.css"
+	rel="stylesheet">
 </head>
 
 <body>
 
 	<div class="container">
-
+		<input type="hidden" id="msg" value="${sessionScope.msg}">
 		<form class="form-signin" method="post" role="form"
-			action="/LoginDemo/login">
+			action="/LoginDemo/loginMsg/login">
 			<h2 class="form-signin-heading">请登录</h2>
 			<label for="userName" class="sr-only">用户名</label> <input type="text"
 				name="userName" class="form-control" placeholder="请输入用户名" required
@@ -38,7 +39,7 @@
 				</label>
 			</div>
 			<button class="btn btn-lg btn-primary btn-block" type="submit">登录</button>
-			<a href="reg.html"> 还没有账号？ </a>
+			<a href="../reg.html"> 还没有账号？ </a>
 		</form>
 
 
@@ -46,5 +47,12 @@
 	<!-- /container -->
 
 </body>
-
+<script src="http://libs.baidu.com/jquery/2.0.0/jquery.min.js"></script>
+<script src="${pageContext.request.contextPath}/layer/layer.js"></script>
+<script>
+	var msg = $("#msg").val();
+	if (msg != "") {
+		layer.msg(msg);
+	}
+</script>
 </html>
