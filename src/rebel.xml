@@ -8,13 +8,13 @@
 
 <!-- E:/JJA1811/workspace/LoginDemo/build/classes -->
 	<classpath>
-		<dir name="C:/Users/Administrator/Desktop/LoginDemo/LoginDemo/build/classes">
+		<dir name="C:/Users/Administrator/git/LDemo/build/classes">
 		</dir>
 	</classpath>
 <!-- E:/JJA1811/workspace/LoginDemo/WebContent -->
 	<web>
 		<link target="/">
-			<dir name="C:/Users/Administrator/Desktop/LoginDemo/LoginDemo/WebContent">
+			<dir name="C:/Users/Administrator/git/LDemo/WebContent">
 			</dir>
 		</link>
 	</web>

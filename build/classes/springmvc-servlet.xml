@@ -8,12 +8,15 @@
 		http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-4.2.xsd">
 
 
+	<!-- 静态资源过滤 -->
 	<mvc:default-servlet-handler />
 
 	<mvc:annotation-driven></mvc:annotation-driven>
 
+	<!-- 扫描控制器所在的包 -->
 	<context:component-scan base-package="com.etc.controller"></context:component-scan>
 
+	<!-- 跳转路径设置 -->
 	<bean
 		class="org.springframework.web.servlet.view.InternalResourceViewResolver">
 		<property name="viewClass"
@@ -21,8 +24,22 @@
 		<property name="prefix" value="/WEB-INF/jsp/"></property>
 		<property name="suffix" value=".jsp"></property>
 	</bean>
+
+	<!-- 文件上传 -->
 	<bean id="multipartResolver"
 		class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+		<property name="maxUploadSize" value="200000"></property>
+	</bean>
+
+	<!-- 异常处理 -->
+	<bean id="exceptionResolver"
+		class="org.springframework.web.servlet.handler.SimpleMappingExceptionResolver">
+		<property name="exceptionMappings">
+			<props>
+				<prop
+					key="org.springframework.web.multipart.MaxUploadSizeExceededException">error_file</prop>
+			</props>
+		</property>
 	</bean>
 
 
