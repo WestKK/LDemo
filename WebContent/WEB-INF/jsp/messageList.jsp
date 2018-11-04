@@ -82,6 +82,7 @@
 				<h1 class="sub-header">消息列表</h1>
 				<button id="modal" class="btn btn-danger update"
 					href="#modal-container-857258" data-toggle="modal">發送信息</button>
+				<button class="layui-btn layui-btn-primary" onclick="upClick()">上传头像</button>
 				<div class="table-responsive">
 					<table class="table table-striped">
 
@@ -123,7 +124,7 @@
 			</div>
 		</div>
 	</div>
-
+	<!-- Modal1 -->
 	<div class="row clearfix">
 		<div class="col-md-12 column">
 			<div class="modal fade" id="modal-container-857258" role="dialog"
@@ -202,6 +203,44 @@
 			</div>
 		</div>
 	</div>
+
+	<!-- Modal3 -->
+	<div class="modal fade" id="myModal03" tabindex="-1" role="dialog"
+		aria-labelledby="myModalLabel" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<form id="modalUpload" novalidate="novalidate"
+					action="/LoginDemo/myupload" method="post" role="form"
+					enctype="multipart/form-data">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal"
+							aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
+						<h4 class="modal-title" id="myModalLabel">上传头像</h4>
+					</div>
+					<div class="modal-body">
+						<div class="form-group">
+							<label for="doc">头像:</label><input type=file name="myfile"
+								id="doc" onchange="showImage();">
+
+						</div>
+						<div class="form-group" id="localImag">
+							<img id="preview" width=-1 height=-1 style="diplay: none" />
+						</div>
+						<div class="form-group">
+							<label for="describe">描述:</label> <input type="text"
+								class="layui-input" id="describe" name="describe">
+						</div>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+						<button type="submit" class="btn btn-primary">上传</button>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
 	<!-- Bootstrap core JavaScript
     ================================================== -->
 	<!-- Placed at the end of the document so the pages load faster -->
@@ -209,252 +248,61 @@
 	<script src="http://libs.baidu.com/jquery/2.0.0/jquery.min.js"></script>
 	<script src="${pageContext.request.contextPath}/js/bootstrap.min.js"></script>
 	<script src="${pageContext.request.contextPath}/layer/layer.js"></script>
+
 	<script>
-		layui
-				.use(
-						'laypage',
-						function() {
-							var laypage = layui.laypage;
+	layui
+	.use(
+			'laypage',
+			function() {
+				var laypage = layui.laypage;
 
-							var c = 
-							${
-								pd.total
-							}
-							;
-
-							var l = 
-							${
-								pd.pageSize
-							}
-							;
-
-							var p = 
-							${
-								pd.page
-							}
-							;
-
-							//执行一个laypage实例
-							laypage
-									.render({
-										elem : 'test1' //注意，这里的 test1 是 ID，不用加 # 号
-										,
-										count : c, //数据总数，从服务端得到
-										limit : l,
-										limits : [ 5, 10, 15 ],
-										skip : '#5e7cdf',
-										layout : [ 'prev', 'page', 'next',
-												'limit', 'skip', 'refresh' ],
-										curr : function() {
-											var page = p; // 当前页(后台获取到的)
-											return page ? page : 1; // 返回当前页码值
-										}(),
-										jump : function(obj, first) {
-											if (!first) {
-												location.href = "${pageContext.request.contextPath}/message/list?page="
-														+ obj.curr
-														+ "&pageSize="
-														+ obj.limit
-														+ "&keywords="
-														+ $("#keywords").val();
-											}
-										}
-									});
-						});
-	</script>
-	<script>
-		layui.use('laydate', function() {
-			var laydate = layui.laydate;
-			//日期时间选择器
-			laydate.render({
-				elem : '#tMsg',
-				type : 'datetime'
-			});
-
-		});
-	</script>
-	<script>
-	
-	
-		function getDelete(e) {
-			layer.confirm('是否删除?', {
-				  btn: ['是的','取消'] //按钮
-				}, function(){
-					$.ajax({
-						url : "${pageContext.request.contextPath}/message/del/"
-								+ $(e).parents("tr").find("td").eq(0).text(),
-						type : "delete",
-						//dataType:"json",
-						success : function(data) {
-							if (data == "true") {
-								layer.alert('删除成功', {
-									skin : 'layui-layer-lan',
-									closeBtn : 0,
-									anim : 6,
-									time: 3000,
-									end: function () {
-						                location.reload();
-						            }
-								//动画类型
-								});
-							} else {
-								layer.alert('删除失败', {
-									skin : 'layui-layer-lan',
-									closeBtn : 0,
-									anim : 6,
-									time: 3000,
-									end: function () {
-						                location.reload();
-						            }
-								//动画类型
-								});
-							}
-						}
-					});
-				});
-		};
-
-		$("#modal")
-				.click(
-						function() {
-							$
-									.ajax({
-										url : "${pageContext.request.contextPath}/message/findName",
-										type : "get",
-										data : {
-											senderName : $("#senderName").val(),
-
-										},
-										success : function(data) {
-											var info = "";
-											$
-													.each(
-															data,
-															function(index, u) {
-																//girl 其实就是集合中的每个对象名			
-																info += "<option value=\"" + u.userName + "\" >"
-																		+ u.userName
-																		+ "</option>";
-															});
-											$("#receiveName").html(info);
-										}
-									});
-						});
-
-		$("#send").click(function() {
-			$.ajax({
-				url : "${pageContext.request.contextPath}/message/addMsg",
-				type : "post",
-				data : {
-					senderName : $("#senderName").val(),
-					receiveName : $("#receiveName").val(),
-					content : $("#content").val(),
-				},
-				success : function(data) {
-					if (data == "true") {
-						layer.alert('发送成功', {
-							skin : 'layui-layer-lan',
-							closeBtn : 0,
-							anim : 4,
-							time: 3000,
-							end: function () {
-				                location.reload();
-				            }
-						//动画类型
-						});
-					} else {
-						layer.alert('发送失败', {
-							skin : 'layui-layer-lan',
-							closeBtn : 0,
-							anim : 4,
-							time: 3000,
-							end: function () {
-				                location.reload();
-				            }
-						//动画类型
-						});
-					}
+				var c = 
+				${
+					pd.total
 				}
-			});
-		});
+				;
 
-		function getChange(e) {
-			var InfoState = $(e).parents("tr").find("td").eq(5).text();
-			if (InfoState == "未读") {
-				$.ajax({
-					url : "${pageContext.request.contextPath}/message/change/"
-							+ $(e).parents("tr").find("td").eq(0).text(),
-					type : "put",
-					contentType : "application/json",
-					data : JSON.stringify({
-						"state" : "1"
-					}),
-					success : function(data) {
-						window.location.reload();
-					}
-				});
-			} else {
-				$.ajax({
-					url : "${pageContext.request.contextPath}/message/change/"
-							+ $(e).parents("tr").find("td").eq(0).text(),
-					type : "put",
-					contentType : "application/json",
-					data : JSON.stringify({
-						"state" : "0"
-					}),
-					success : function(data) {
-						window.location.reload();
-					}
-				});
-			}
-		};
-
-		function updateInfo(e) {
-			var content = $(e).parents("tr").find("td").eq(3).text();
-			var time = $(e).parents("tr").find("td").eq(4).text();
-			$("#cMsg").val(content);
-			$("#tMsg").val(time);
-			$("#myModal").modal("show");
-			$("#change").click(function() {
-			$.ajax({
-				url : "${pageContext.request.contextPath}/message/update/"
-						+ $(e).parents("tr").find("td").eq(0).text(),
-				type : "put",
-				contentType : "application/json",
-				data : JSON.stringify({
-					"content" : $("#cMsg").val(),
-					"time" : $("#tMsg").val(),
-				}),
-				success : function(data) {
-					$("#myModal").modal("hide");
-					if (data == true) {
-						layer.alert('修改成功', {
-							skin : 'layui-layer-lan',
-							closeBtn : 0,
-							anim : 4,
-							time: 3000,
-							end: function () {
-				                location.reload();
-				            }
-						//动画类型
-						});
-					} else {
-						layer.alert('修改失败', {
-							skin : 'layui-layer-lan',
-							closeBtn : 0,
-							anim : 4,
-							time: 3000,
-							end: function () {
-				                location.reload();
-				            }
-						//动画类型
-						});
-					}
+				var l = 
+				${
+					pd.pageSize
 				}
+				;
+
+				var p = 
+				${
+					pd.page
+				}
+				;
+
+				//执行一个laypage实例
+				laypage
+						.render({
+							elem : 'test1' //注意，这里的 test1 是 ID，不用加 # 号
+							,
+							count : c, //数据总数，从服务端得到
+							limit : l,
+							limits : [ 5, 10, 15 ],
+							skip : '#5e7cdf',
+							layout : [ 'prev', 'page', 'next',
+									'limit', 'skip', 'refresh' ],
+							curr : function() {
+								var page = p; // 当前页(后台获取到的)
+								return page ? page : 1; // 返回当前页码值
+							}(),
+							jump : function(obj, first) {
+								if (!first) {
+									location.href = "${pageContext.request.contextPath}/message/list?page="
+											+ obj.curr
+											+ "&pageSize="
+											+ obj.limit
+											+ "&keywords="
+											+ $("#keywords").val();
+								}
+							}
+						});
 			});
-		  });
-		};
 	</script>
-</body>
+		<script src="${pageContext.request.contextPath}/js/message.js"></script>
+	
 
 </html>

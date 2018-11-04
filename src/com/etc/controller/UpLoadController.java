@@ -40,7 +40,7 @@ public class UpLoadController {
 			e.printStackTrace();
 		}
 
-		return "sss";
+		return "messageList";
 
 	}
 
